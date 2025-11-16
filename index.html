@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nyssa Bake and Bloomhouse — Bakery and Flowers</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>.checkout-items {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.checkout-item {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(245,245,245,0.8);
+  border-radius:10px;
+  padding:6px 10px;
+}
+
+.ci-thumb-mini {
+  width:50px;
+  height:50px;
+  border-radius:6px;
+  background:var(--sand);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+
+.checkout-summary label {
+  display:flex;
+  flex-direction:column;
+  font-size:14px;
+  margin-bottom:6px;
+}
+
+.checkout-summary input,
+.checkout-summary select {
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid rgba(0,0,0,0.15);
+}
+
+    /* style.css (embedded) */
+    :root{
+      --seafoam: #66bfbf; /* seafoam green */
+      --cream: #f6efe6;   /* warm cream */
+      --sand: #e8d9c8;    /* beige/sand */
+      --blush: #ffd6e0;   /* soft pink accent */
+      --ink: #3b3b3b;     /* text */
+      --muted: #8b8b8b;
+      --radius: 14px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg, #fbfdfd 0%, var(--cream) 100%);
+      color:var(--ink); -webkit-font-smoothing:antialiased;
+      padding:18px;
+      display:flex; justify-content:center;
+    }
+
+    .container{
+      width:100%; max-width:980px; background:rgba(255,255,255,0.6); border-radius:20px; box-shadow:0 6px 30px rgba(20,20,20,0.06);
+      padding:20px; backdrop-filter: blur(4px);
+    }
+
+    header{
+      display:flex; gap:12px; align-items:center; margin-bottom:18px;
+    }
+
+    .logo{
+      width:78px; height:78px; border-radius:18px; background:linear-gradient(135deg,var(--seafoam),var(--sand));
+      display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 4px 14px rgba(102,191,191,0.18);
+    }
+
+    .logo svg{width:56px; height:56px}
+
+    .title{
+      display:flex; flex-direction:column; gap:2px;
+    }
+
+    h1{font-family:'Playfair Display', serif; margin:0; font-size:20px; letter-spacing:0.3px}
+    p.subtitle{margin:0; color:var(--muted); font-size:13px}
+
+    .top-actions{margin-left:auto; display:flex; gap:10px; align-items:center}
+    .cart-btn{background:var(--seafoam); color:white; padding:10px 12px; border-radius:999px; border:none; cursor:pointer; box-shadow:0 6px 10px rgba(102,191,191,0.14)}
+    .cart-count{background:var(--blush); color:#6b2b3a; font-weight:600; padding:4px 8px; border-radius:999px; font-size:13px; margin-left:6px}
+
+    main{display:grid; grid-template-columns: 1fr; gap:16px}
+
+    .hero{
+      background: linear-gradient(90deg, rgba(255,255,255,0.7), rgba(255,255,255,0.55));
+      border-radius:12px; padding:14px; display:flex; gap:14px; align-items:center;
+    }
+
+    .hero .text{flex:1}
+    .hero h2{margin:0; font-family:'Playfair Display'; font-size:22px}
+    .hero p{margin:6px 0 0 0; color:var(--muted)}
+
+    .search-bar{display:flex; gap:10px; align-items:center}
+    .search-bar input{flex:1; padding:10px 12px; border-radius:12px; border:1px solid rgba(0,0,0,0.06); background:white}
+    .search-bar button{padding:10px 12px; border-radius:12px; border:none; background:var(--sand); cursor:pointer}
+
+    /* product grid */
+    .products{display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px}
+    .card{background:linear-gradient(180deg, white, rgba(255,255,255,0.94)); border-radius:14px; padding:12px; display:flex; flex-direction:column; gap:8px; box-shadow:0 6px 18px rgba(15,15,15,0.04)}
+
+    .product-img{height:120px; border-radius:10px; background:linear-gradient(180deg,var(--sand),var(--cream)); display:flex; align-items:center; justify-content:center; font-size:28px; color:var(--muted)}
+    .product-title{font-weight:600; font-size:15px}
+    .product-desc{font-size:13px; color:var(--muted)}
+    .price-row{display:flex; justify-content:space-between; align-items:center}
+    .price{font-weight:700}
+    .add-btn{background:var(--seafoam); color:white; padding:8px 10px; border-radius:10px; border:none; cursor:pointer}
+
+    /* cart drawer */
+    .cart-drawer{position:fixed; right:16px; bottom:16px; width:320px; max-width:92%; background:white; border-radius:14px; box-shadow:0 20px 50px rgba(20,20,20,0.12); padding:12px; transform:translateY(120%); transition:transform .28s ease;}
+    .cart-drawer.open{transform:translateY(0)}
+    .cart-header{display:flex; align-items:center; gap:8px}
+    .cart-items{max-height:260px; overflow:auto; margin-top:8px; display:flex; flex-direction:column; gap:8px}
+    .cart-item{display:flex; gap:8px; align-items:center}
+    .ci-thumb{width:56px; height:56px; border-radius:8px; background:var(--sand); display:flex; align-items:center; justify-content:center}
+    .ci-body{flex:1}
+    .qty-controls{display:flex; gap:6px; align-items:center}
+    .icon-btn{background:transparent; border:1px solid rgba(0,0,0,0.06); padding:6px 8px; border-radius:8px; cursor:pointer}
+    .cart-footer{display:flex; justify-content:space-between; margin-top:10px; align-items:center}
+    .checkout-btn{background:var(--blush); color:#6b2b3a; padding:10px 12px; border-radius:10px; border:none; font-weight:700; cursor:pointer}
+
+    /* decorative ribbon */
+    .ribbon{position:absolute; right:18px; top:12px; transform:rotate(10deg); font-size:12px; background:var(--blush); padding:6px 10px; border-radius:8px}
+
+    footer{margin-top:18px; color:var(--muted); font-size:13px; text-align:center}
+
+    /* responsive tweaks */
+    @media (max-width:520px){
+      .logo{width:64px;height:64px}
+      header{gap:8px}
+      .hero{flex-direction:column; align-items:flex-start}
+      .cart-drawer{right:10px; left:10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo" aria-hidden>
+        <!-- small bakery + flower icon -->
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="28" width="52" height="24" rx="6" fill="white" opacity="0.18"/>
+          <path d="M32 6c6 0 11 4 11 9s-5 9-11 9-11-4-11-9 5-9 11-9z" fill="white" opacity="0.18"/>
+          <g transform="translate(8,8)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6c2.5 0 4.5 2 4.5 4.5S20.5 15 18 15s-4.5-2-4.5-4.5S15.5 6 18 6z" />
+            <path d="M32 22c-4 4-10 4-14 0" />
+          </g>
+        </svg>
+        <div class="ribbon">Nyssa Bake and Bloomhouse</div>
+      </div>
+
+      <div class="title">
+        <h1>Nyssa Bake and Bloomhouse</h1>
+        <p class="subtitle">A small spot near the beach.</p>
+      </div>
+
+      <div class="top-actions">
+        <div style="font-size:13px;color:var(--muted)">Open: Mon–Sun • 07:00–16:00</div>
+        <button class="cart-btn" id="openCartBtn" aria-expanded="false">Keranjang <span class="cart-count" id="cartCount">0</span></button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="text">
+          <h2>Patisseries and Flowers, where pastries meet petals</h2>
+          <p>Made with care, calm, and a little of flour dust.</p>
+        </div>
+        <div style="min-width:200px">
+          <div class="search-bar">
+            <input type="search" id="searchInput" placeholder="Cari: croissant, cupcake, bouquet...">
+            <button id="clearSearch">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <section style="margin-top:8px">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+          <h3 style="margin:0; font-family:'Playfair Display'">Pilihan Kami</h3>
+          <div style="color:var(--muted); font-size:13px">Vintage • Calm • Seafoam</div>
+        </div>
+
+        <div class="products" id="products"></div>
+      </section>
+
+    </main>
+<section id="checkoutSection" style="display:none; margin-top:16px;">
+  <h3>Checkout & Payment</h3>
+  <div class="checkout-items" id="checkoutItems"></div>
+
+  <div class="checkout-summary">
+    <label>
+      Name:
+      <input type="text" id="checkoutName" placeholder="Your name" />
+    </label>
+    <label>
+      Payment Method:
+      <select id="paymentMethod">
+        <option value="card">Credit / Debit Card</option>
+        <option value="paypal">PayPal</option>
+        <option value="cod">Cash on Delivery</option>
+      </select>
+    </label>
+    <div style="margin-top:8px; font-weight:600;">Total: <span id="checkoutTotal">Rp0</span></div>
+    <button id="confirmPaymentBtn" class="checkout-btn">Confirm Payment</button>
+  </div>
+
+  <div id="checkoutMessage" style="margin-top:12px; color:var(--seafoam); font-weight:600;"></div>
+</section>
+
+    <footer>
+      &copy; <span id="year"></span> Nyssa Bake and Bloomhouse — Made with butter and quiet mornings.
+    </footer>
+  </div>
+
+  <!-- cart drawer -->
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="cart-header">
+      <strong>Keranjangmu</strong>
+      <div style="margin-left:auto; color:var(--muted); font-size:13px">(tersimpan di browser)</div>
+    </div>
+
+    <div class="cart-items" id="cartItems"></div>
+
+    <div class="cart-footer">
+      <div style="display:flex; flex-direction:column">
+        <div style="color:var(--muted); font-size:13px">Total</div>
+        <div id="cartTotal" style="font-weight:700; font-size:16px">Rp0</div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center">
+        <button id="clearCart" class="icon-btn">Kosongkan</button>
+        <button id="checkoutBtn" class="checkout-btn">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    // script.js (embedded)
+    // Data produk contoh
+    const productsData = [
+      { id: 'p1', title: 'Sea Salt Croissant', price: 25000, desc: 'Flaky croissant with a pinch of sea salt.', type:'bakery', img:'images/croisant.jpg' },
+      { id: 'p2', title: 'Sunrise Sourdough', price: 45000, desc: 'Crunchy, chewy, and crackly crust sourdough.', type:'bakery', img:'images/sourdough.jpg' },
+      { id: 'p3', title: 'Pink Blossom Cupcake', price: 22000, desc: 'Soft and fluffy strawberry cupcake.', type:'bakery', img:'images/cupcake.jpg' },
+      { id: 'p4', title: 'Iris Bouquet', price: 156000, desc: 'A unique bloom of Iris for your special moments.', type:'flower', img:'images/bouquet.jpg' },
+      { id: 'p5', title: 'Seaside Biscotti', price: 18000, desc: 'Twice-baked and crunchy almond biscuit.', type:'bakery', img:'images/biscotti.jpg' }
+    ];
+
+    // Utils
+    const rupiah = (n) => 'Rp' + n.toLocaleString('id-ID');
+
+    // render produk
+    const productsEl = document.getElementById('products');
+    function renderProducts(list){
+      productsEl.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div'); card.className = 'card';
+
+        const img = document.createElement('div'); img.className = 'product-img';
+        img.innerHTML = getProductImg(p);
+
+        const title = document.createElement('div'); title.className = 'product-title'; title.textContent = p.title;
+        const desc = document.createElement('div'); desc.className = 'product-desc'; desc.textContent = p.desc;
+
+        const row = document.createElement('div'); row.className = 'price-row';
+        const price = document.createElement('div'); price.className = 'price'; price.textContent = rupiah(p.price);
+        const add = document.createElement('button'); add.className = 'add-btn'; add.textContent = 'Add'; add.onclick = ()=> addToCart(p.id);
+
+        row.appendChild(price); row.appendChild(add);
+        card.appendChild(img); card.appendChild(title); card.appendChild(desc); card.appendChild(row);
+        productsEl.appendChild(card);
+      })
+    }
+
+    // simple SVG placeholder per produk
+    function getProductImg(p){
+      if(p.type === 'flower'){
+        return `
+          <svg viewBox="0 0 64 64" width="86" height="86" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="22" r="10" fill="var(--blush)" />
+            <path d="M32 34c6 0 12 8 12 10s-6 6-12 6-12-2-12-6 6-10 12-10z" fill="var(--sand)" />
+          </svg>`
+      }
+      return `
+        <svg viewBox="0 0 64 64" width="86" height="86" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="14" width="52" height="36" rx="8" fill="var(--seafoam)" opacity="0.12" />
+          <path d="M18 34c6-6 22-6 28 0" stroke="var(--seafoam)" stroke-width="2" stroke-linecap="round" fill="none" />
+        </svg>`
+    }
+
+    // CART (localStorage)
+    const CART_KEY = 'salt_and_crumbs_cart_v1';
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+
+    function saveCart(){
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      updateCartUI();
+    }
+const checkoutItemsEl = document.getElementById('checkoutItems');
+const checkoutTotalEl = document.getElementById('checkoutTotal');
+
+function renderCheckoutItems(){
+  const items = cartItemsArray();
+  checkoutItemsEl.innerHTML = '';
+  if(items.length === 0){
+    checkoutItemsEl.innerHTML = '<div style="color:var(--muted); text-align:center">Your cart is empty.</div>';
+  } else {
+    items.forEach(it=>{
+      const row = document.createElement('div');
+      row.className = 'checkout-item';
+      const thumb = document.createElement('div');
+      thumb.className = 'ci-thumb-mini';
+      thumb.innerHTML = getProductSVG(it);
+      const info = document.createElement('div');
+      info.innerHTML = `<div style="font-weight:600">${it.title}</div><div style="font-size:13px; color:var(--muted)">${rupiah(it.price)} x ${it.qty}</div>`;
+      row.appendChild(thumb);
+      row.appendChild(info);
+      checkoutItemsEl.appendChild(row);
+    });
+  }
+  checkoutTotalEl.textContent = rupiah(cartTotal());
+}
+
+// buka section checkout
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+  if(cartTotal() === 0){
+    alert('Your cart is empty — add some sweetness first!');
+    return;
+  }
+  checkoutSection.style.display = 'block';
+  checkoutMessage.textContent = '';
+  renderCheckoutItems();
+  checkoutSection.scrollIntoView({behavior:'smooth'});
+});
+
+// confirm payment
+confirmPaymentBtn.addEventListener('click', () => {
+  const name = document.getElementById('checkoutName').value.trim();
+  const method = document.getElementById('paymentMethod').value;
+
+  if(!name){
+    alert('Please enter your name to proceed.');
+    return;
+  }
+
+  let paymentText = '';
+  if(method === 'card') paymentText = 'via Credit/Debit Card';
+  else if(method === 'paypal') paymentText = 'via PayPal';
+  else paymentText = 'with Cash on Delivery';
+
+  checkoutMessage.textContent = `Thank you, ${name}! Your order of ${rupiah(cartTotal())} is confirmed ${paymentText}.`;
+  
+  clearCart();
+  renderCheckoutItems();
+  checkoutSection.scrollIntoView({behavior:'smooth'});
+});
+
+    function addToCart(productId){
+      if(!cart[productId]) cart[productId] = 0;
+      cart[productId] += 1;
+      saveCart();
+      openCart();
+      // small animation: flash cart button
+      const cb = document.getElementById('openCartBtn');
+      cb.animate([{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],{duration:350});
+    }
+
+    function removeFromCart(productId){
+      delete cart[productId];
+      saveCart();
+    }
+
+    function changeQty(productId, delta){
+      if(!cart[productId]) return;
+      cart[productId] += delta;
+      if(cart[productId] <= 0) delete cart[productId];
+      saveCart();
+    }
+
+    function clearCart(){
+      cart = {};
+      saveCart();
+    }
+
+    function cartItemsArray(){
+      return Object.entries(cart).map(([id, qty]) => {
+        const product = productsData.find(p=>p.id===id);
+        return { ...product, qty };
+      });
+    }
+
+    function cartTotal(){
+      return cartItemsArray().reduce((s,it)=> s + (it.price * it.qty), 0);
+    }
+
+    // render cart drawer
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartCountEl = document.getElementById('cartCount');
+    const cartTotalEl = document.getElementById('cartTotal');
+
+    function updateCartUI(){
+      const items = cartItemsArray();
+      cartItemsEl.innerHTML = '';
+      if(items.length === 0){
+        cartItemsEl.innerHTML = '<div style="color:var(--muted); padding:14px; text-align:center">Keranjang kosong — tambahkan kue manis</div>';
+      } else {
+        items.forEach(it=>{
+          const row = document.createElement('div'); row.className = 'cart-item';
+          const thumb = document.createElement('div'); thumb.className = 'ci-thumb'; thumb.innerHTML = getProductSVG(it);
+          const body = document.createElement('div'); body.className = 'ci-body';
+          body.innerHTML = `<div style="font-weight:600">${it.title}</div><div style="color:var(--muted); font-size:13px">${rupiah(it.price)}</div>`;
+          const controls = document.createElement('div'); controls.className = 'qty-controls';
+          const minus = document.createElement('button'); minus.className = 'icon-btn'; minus.textContent = '-'; minus.onclick = ()=> changeQty(it.id, -1);
+          const spanQ = document.createElement('div'); spanQ.textContent = it.qty; spanQ.style.minWidth='20px'; spanQ.style.textAlign='center';
+          const plus = document.createElement('button'); plus.className = 'icon-btn'; plus.textContent = '+'; plus.onclick = ()=> changeQty(it.id, +1);
+          const rem = document.createElement('button'); rem.className = 'icon-btn'; rem.textContent = '✕'; rem.onclick = ()=> removeFromCart(it.id);
+          controls.appendChild(minus); controls.appendChild(spanQ); controls.appendChild(plus); controls.appendChild(rem);
+          row.appendChild(thumb); row.appendChild(body); row.appendChild(controls);
+          cartItemsEl.appendChild(row);
+        });
+      }
+
+      const total = cartTotal();
+      cartCountEl.textContent = Object.values(cart).reduce((s,n)=>s+n,0);
+      cartTotalEl.textContent = rupiah(total);
+    }
+
+    // open/close cart
+    function openCart(){
+      cartDrawer.classList.add('open'); cartDrawer.setAttribute('aria-hidden','false'); document.getElementById('openCartBtn').setAttribute('aria-expanded','true');
+    }
+    function closeCart(){
+      cartDrawer.classList.remove('open'); cartDrawer.setAttribute('aria-hidden','true'); document.getElementById('openCartBtn').setAttribute('aria-expanded','false');
+    }
+
+    document.getElementById('openCartBtn').addEventListener('click', ()=>{
+      if(cartDrawer.classList.contains('open')) closeCart(); else openCart();
+    });
+
+    document.getElementById('clearCart').addEventListener('click', ()=>{
+      clearCart();
+    });
+
+    document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+      const total = cartTotal();
+      if(total === 0){
+        alert('Your cart is empty, please check our products');
+        return;
+      }
+      // fake checkout flow
+      const name = prompt('Masukkan nama untuk pesanan:', 'Nyssa');
+      if(!name) return;
+      alert(`Terima kasih, ${name}! Pesananmu sebesar ${rupiah(total)} berhasil diterima. (Demo)`);
+      clearCart();
+      closeCart();
+    });
+
+    // search
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    searchInput.addEventListener('input', ()=>{
+      const q = searchInput.value.trim().toLowerCase();
+      const list = productsData.filter(p=> (p.title + ' ' + p.desc).toLowerCase().includes(q));
+      renderProducts(list);
+    });
+    clearSearch.addEventListener('click', ()=>{ searchInput.value=''; renderProducts(productsData); });
+
+    // initialize
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderProducts(productsData);
+    updateCartUI();
+
+  </script>
+</body>
+</html>
